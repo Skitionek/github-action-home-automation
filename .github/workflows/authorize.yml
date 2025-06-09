@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-python@v5
 
       - name: Install dependencies
-        run: pipenv install
+        run: apt install -y pipenv && pipenv install
 
       - name: Run auth.py
         run: python auth.py "${{ secrets.username }}" "${{ secrets.code_or_password }}"
