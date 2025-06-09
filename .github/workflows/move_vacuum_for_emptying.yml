@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-python@v5
 
       - name: Install dependencies
-        run: apt install -y pipenv && pipenv install
+        run: pip install -r requirements.txt
 
       - name: Move Vacuum
         run: python goto.py "${{ github.event.inputs.target_x | secrets.target_x }}" "${{ github.event.inputs.target_y | secrets.target_y }}"
