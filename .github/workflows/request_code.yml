@@ -2,10 +2,6 @@ name: "Request Authorization Code"
 
 on:
   workflow_dispatch:
-    inputs:
-      username:
-        description: "Username for the vacuum API"
-        required: true
 
 jobs:
   request-code:
@@ -24,5 +20,5 @@ jobs:
         run: pipenv install
 
       - name: Run request_code.py
-        run: python request_code.py "${{ github.event.inputs.username }}"
+        run: python request_code.py "${{ secrets.username }}"
         shell: bash
