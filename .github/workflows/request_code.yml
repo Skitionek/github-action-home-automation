@@ -1,0 +1,28 @@
+name: "Request Authorization Code"
+
+on:
+  workflow_dispatch:
+    inputs:
+      username:
+        description: "Username for the vacuum API"
+        required: true
+
+jobs:
+  request-code:
+    runs-on:
+      - self-hosted
+      - home
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+
+      - name: Install dependencies
+        run: pipenv install
+
+      - name: Run request_code.py
+        run: python request_code.py "${{ github.event.inputs.username }}"
+        shell: bash

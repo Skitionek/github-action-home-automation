@@ -1,0 +1,29 @@
+name: Move Vacuum for Emptying
+on:
+  schedule:
+    - cron: "0 18 * * 2" # Runs at 6pm on Tuesdays
+  workflow_dispatch:
+    inputs:
+      target_x:
+        description: "Target X coordinate for the vacuum"
+      target_y:
+        description: "Target Y coordinate for the vacuum"
+
+jobs:
+  move-vacuum:
+    runs-on:
+      - self-hosted
+      - home
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+
+      - name: Install dependencies
+        run: pipenv install
+
+      - name: Move Vacuum
+        run: python goto.py "${{ github.event.inputs.target_x | secrets.target_x }}" "${{ github.event.inputs.target_y | secrets.target_y }}"

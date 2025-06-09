@@ -1,0 +1,23 @@
+name: "Authenticate User"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  authenticate:
+    runs-on:
+      - self-hosted
+      - home
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+
+      - name: Install dependencies
+        run: pipenv install
+
+      - name: Run auth.py
+        run: python auth.py "${{ secrets.username }}" "${{ secrets.code_or_password }}"
+        shell: bash
