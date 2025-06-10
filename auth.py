@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import logging
 import pickle
+import os
 from typing import Tuple
 
 from roborock import UserData
@@ -10,7 +11,10 @@ from roborock.web_api import RoborockApiClient
 logger = logging.getLogger(__name__)
 
 
-USER_DATA_FILE = "user.pkl"
+USER_DATA_FILE = os.getenv(
+    "ROBOROCK_USER_DATA_FILE",
+    "user.pkl"
+)
 
 
 def save_user_data(username: str, user_data: UserData) -> None:

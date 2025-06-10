@@ -19,5 +19,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run auth.py
+        env:
+          ROBOROCK_USER_DATA_FILE: ~/.roborock_user_data
         run: python auth.py "${{ secrets.username }}" "${{ secrets.code_or_password }}"
         shell: bash

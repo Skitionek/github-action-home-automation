@@ -3,11 +3,6 @@ on:
   schedule:
     - cron: "0 18 * * 2" # Runs at 6pm on Tuesdays
   workflow_dispatch:
-    inputs:
-      target_x:
-        description: "Target X coordinate for the vacuum"
-      target_y:
-        description: "Target Y coordinate for the vacuum"
 
 jobs:
   move-vacuum:
@@ -26,4 +21,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Move Vacuum
-        run: python goto.py "${{ github.event.inputs.target_x | secrets.target_x }}" "${{ github.event.inputs.target_y | secrets.target_y }}"
+        env:
+          ROBOROCK_USER_DATA_FILE: ~/.roborock_user_data
+        run: |
+            python goto.py "${{ secrets.target_x }}" "${{ secrets.target_y }}"
