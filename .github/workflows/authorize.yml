@@ -20,6 +20,6 @@ jobs:
 
       - name: Run auth.py
         env:
-          ROBOROCK_USER_DATA_FILE: ~/.roborock_user_data
+          ROBOROCK_USER_DATA_FILE: /home/dommas/.roborock_user_data
         run: python auth.py "${{ secrets.username }}" "${{ secrets.code_or_password }}"
         shell: bash
