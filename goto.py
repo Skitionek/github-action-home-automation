@@ -54,7 +54,6 @@ async def goto(target_x: int, target_y: int):
     ]
 
     # Prep mapping products to device data:
-    print(home_data.get_all_devices())
     device_by_product_id = {
         device.product_id: device for device in home_data.get_all_devices()
     }
