@@ -1,7 +1,7 @@
 name: Move Vacuum for Emptying
 on:
   schedule:
-    - cron: "0 18 * * 2" # Runs at 6pm on Tuesdays
+    - cron: "0 18 * * 4" # Runs at 6pm on Thursdays
   workflow_dispatch:
 
 jobs:
