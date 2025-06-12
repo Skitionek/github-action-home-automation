@@ -1,2 +1,1 @@
-# Use old version to avoid pillow dependency issues
-python-roborock == 2.7.2
+python-roborock @ git+https://github.com/Skitionek/python-roborock.git@3a53c1040ee193911e5dd2e9fea55432b55dd654
