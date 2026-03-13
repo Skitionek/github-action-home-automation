@@ -1,5 +1,7 @@
 import argparse
 import asyncio
+import base64
+import binascii
 import logging
 import pickle
 import os
@@ -19,12 +21,29 @@ USER_DATA_FILE = os.getenv(
 
 def save_user_data(username: str, user_data: UserData) -> None:
     """Save user data after code login."""
-    pickle.dump((username, user_data), open(USER_DATA_FILE, "wb"))
+    data = pickle.dumps((username, user_data))
+    with open(USER_DATA_FILE, "wb") as f:
+        f.write(data)
     logger.info("User data saved successfully.")
+    b64 = base64.b64encode(data).decode()
+    print(
+        f"Store the following value as the ROBOROCK_USER_DATA GitHub Actions secret:\n{b64}"
+    )
 
 
 def load_user() -> Tuple[str, UserData]:
-    """Load user data from file."""
+    """Load user data from the ROBOROCK_USER_DATA env var (base64) or from file."""
+    env_data = os.getenv("ROBOROCK_USER_DATA")
+    if env_data:
+        try:
+            username, user_data = pickle.loads(base64.b64decode(env_data))
+            logger.info("User data loaded from environment variable.")
+            return username, user_data
+        except (binascii.Error, pickle.UnpicklingError, ValueError, TypeError, EOFError) as exc:
+            raise ValueError(
+                "ROBOROCK_USER_DATA env var is set but could not be decoded. "
+                "Please re-run the authenticate workflow."
+            ) from exc
     try:
         username, user_data = pickle.load(open(USER_DATA_FILE, "rb"))
         logger.info("User data loaded successfully.")
