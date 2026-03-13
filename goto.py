@@ -5,37 +5,13 @@ import logging
 from auth import load_user
 from roborock import (
     DeviceData,
-    HomeDataDevice,
-    HomeDataProduct,
     RoborockCategory,
     RoborockCommand,
-    UserData,
 )
-from roborock.version_1_apis import RoborockLocalClientV1, RoborockMqttClientV1
+from roborock.version_1_apis import RoborockMqttClientV1
 from roborock.web_api import RoborockApiClient
 
 logger = logging.getLogger(__name__)
-
-
-async def get_local_client(
-    user_data: UserData,
-    home_data_product: HomeDataProduct,
-    home_data_device: HomeDataDevice,
-) -> RoborockLocalClientV1:
-    """Get a local client for the device."""
-
-    # Create the Mqtt(aka cloud required) Client
-    mqtt_client = RoborockMqttClientV1(
-        user_data, DeviceData(home_data_device, home_data_product.model)
-    )
-    networking = await mqtt_client.get_networking()
-    if not networking or not networking.ip:
-        raise ValueError(
-            f"Failed to get networking data for product {home_data_product.name} with id {home_data_product.id}"
-        )
-    return RoborockLocalClientV1(
-        DeviceData(home_data_device, home_data_product.model, networking.ip)
-    )
 
 
 async def goto(target_x: int, target_y: int):
@@ -67,8 +43,10 @@ async def goto(target_x: int, target_y: int):
             )
             continue
 
-        local_client = await get_local_client(user_data, product, device)
-        await local_client.send_command(
+        mqtt_client = RoborockMqttClientV1(
+            user_data, DeviceData(device, product.model)
+        )
+        await mqtt_client.send_command(
             RoborockCommand.APP_GOTO_TARGET, [target_x, target_y]
         )
 

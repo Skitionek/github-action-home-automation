@@ -15,16 +15,9 @@ I like to think of it as *ingenious in its simplicity*.
 
 ## How It Works
 
-In a moment of creative madness, I started thinking seriously about accessibility and ease of replication. Assuming not everyone has a stack of Raspberry Pis lying around, I decided to explore using an old Android phone as the main compute unit.
+Commands are sent to the vacuum directly through the **Roborock cloud API** (via MQTT), so no local network access or self-hosted runner is required. All workflows run on standard GitHub-hosted runners (`ubuntu-latest`).
 
-Here’s what I did:
-
-- Installed **Termux**, **proot-distro**, and a **Debian environment** on the phone  
-- Set up a **GitHub Actions runner** within that environment  
-- The runner connects to the GitHub repo via long-polling (every 5 minutes)  
-- The phone remains on the same local network as my vacuum cleaner  
-
-This setup lets me run Python code on the phone that communicates over localhost with my smart devices—including the vacuum.
+Authentication credentials are stored as a GitHub Actions secret (`ROBOROCK_USER_DATA`) so they persist between runs without needing a local machine.
 
 Want to see it in action? Check the GitHub Action runs in the repository.
 
@@ -33,13 +26,13 @@ Want to see it in action? Check the GitHub Action runs in the repository.
 You can get the system running in just a few steps:
 
 1. **Fork** this repository.
-2. **Add your Roborock username** as a GitHub secret (`USERNAME`).
+2. **Add your Roborock username** as a GitHub secret (`username`).
 3. Run the `Request Authorization Code` action.
-4. Check your email for the verification code and **add it as a GitHub secret** (`PASSWORD_OR_CODE`).
-5. Run the `Authenticate User` action.
+4. Check your email for the verification code and **add it as a GitHub secret** (`code_or_password`).
+5. Run the `Authenticate User` action. Copy the base64 string printed at the end of the run and **add it as a GitHub secret** (`ROBOROCK_USER_DATA`).
 6. Then, iteratively:
-   - Update the `TARGET_X` and `TARGET_Y` secrets (the dock station is approximately at `2500,2500`).
+   - Update the `target_x` and `target_y` secrets (the dock station is approximately at `2500,2500`).
    - Run the `Move Vacuum for Emptying` action.
    - Repeat until the vacuum reaches the desired position.
 
-Let me know if you end up reproducing or improving this setup—I’d love to hear about it!
+Let me know if you end up reproducing or improving this setup—I'd love to hear about it!

@@ -5,9 +5,9 @@ on:
 
 jobs:
   request-code:
-    runs-on:
-      - self-hosted
-      - home
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout repository
