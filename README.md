@@ -26,13 +26,26 @@ Want to see it in action? Check the GitHub Action runs in the repository.
 You can get the system running in just a few steps:
 
 1. **Fork** this repository.
-2. **Add your Roborock username** as a GitHub secret (`username`).
-3. Run the `Request Authorization Code` action.
-4. Check your email for the verification code and **add it as a GitHub secret** (`code_or_password`).
-5. Run the `Authenticate User` action. Copy the base64 string printed at the end of the run and **add it as a GitHub secret** (`ROBOROCK_USER_DATA`).
-6. Then, iteratively:
-   - Update the `target_x` and `target_y` secrets (the dock station is approximately at `2500,2500`).
-   - Run the `Move Vacuum for Emptying` action.
-   - Repeat until the vacuum reaches the desired position.
+2. Request a verification code:
+   ```bash
+   python request_code.py your@email.com
+   ```
+3. Check your email for the code, then authenticate:
+   ```bash
+   python auth.py your@email.com <code-or-password>
+   ```
+4. Copy the printed values and add them as GitHub Actions secrets:
+   - `ROBOROCK_USERNAME` — your Roborock account email
+   - `ROBOROCK_USER_DATA` — the YAML block printed by `auth.py`
+5. Add your target coordinates as GitHub secrets (`target_x`, `target_y`).
+   The dock station is approximately at `2500,2500`.
+6. Run the `Home Automation` workflow (or wait for the Thursday schedule) to move the vacuum.
+
+To send the vacuum to coordinates manually:
+```bash
+export ROBOROCK_USERNAME=your@email.com
+export ROBOROCK_USER_DATA="$(cat user_data.yaml)"
+python goto.py 2500 2500
+```
 
 Let me know if you end up reproducing or improving this setup—I'd love to hear about it!

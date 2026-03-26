@@ -1,1 +1,2 @@
 python-roborock @ git+https://github.com/Skitionek/python-roborock.git@main
+pyyaml

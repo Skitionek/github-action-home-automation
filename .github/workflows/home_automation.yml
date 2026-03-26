@@ -1,15 +1,15 @@
-name: Move Vacuum for Emptying
+name: Home Automation
+
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 18 * * 4" # Runs at 6pm on Thursdays
-  workflow_dispatch:
 
 jobs:
   move-vacuum:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -22,6 +22,10 @@ jobs:
 
       - name: Move Vacuum
         env:
+          ROBOROCK_USERNAME: ${{ secrets.ROBOROCK_USERNAME }}
           ROBOROCK_USER_DATA: ${{ secrets.ROBOROCK_USER_DATA }}
         run: |
-            python goto.py "${{ secrets.target_x }}" "${{ secrets.target_y }}"
+          python command.py app_goto_target "${{ secrets.target_x }}" "${{ secrets.target_y }}" &&
+          echo "::notice::Vacuum has been moved to the target location for emptying." ||
+          echo "::error::Failed to move the vacuum. Please check the logs for details."
+        shell: bash
