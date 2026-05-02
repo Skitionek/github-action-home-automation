@@ -1,8 +1,9 @@
+"""Send Roborock commands to all discovered vacuums for the authenticated user."""
+
 import argparse
 import asyncio
 import logging
 
-from auth import load_user
 from roborock import (
     DeviceData,
     RoborockCategory,
@@ -10,6 +11,8 @@ from roborock import (
 )
 from roborock.version_1_apis import RoborockMqttClientV1
 from roborock.web_api import RoborockApiClient
+
+from auth import load_user
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +30,7 @@ def parse_command(value: str) -> RoborockCommand:
 
 
 async def broadcast_command(cmd: RoborockCommand, params: list):
+    """Send a command to each discovered vacuum and stream individual results."""
     username, user_data = load_user()
 
     web_api = RoborockApiClient(username=username)
@@ -60,7 +64,7 @@ async def broadcast_command(cmd: RoborockCommand, params: list):
         mqtt_client = RoborockMqttClientV1(user_data, DeviceData(device, product.model))
         try:
             yield await mqtt_client.send_command(cmd, params)
-        except Exception:
+        except RuntimeError:
             logger.exception("Failed to send command to device %s", product.name)
             failed.append(product.name)
         finally:
@@ -71,6 +75,7 @@ async def broadcast_command(cmd: RoborockCommand, params: list):
 
 
 async def command(cmd: RoborockCommand, params: list):
+    """Entry point that logs results from broadcasting a command to all vacuums."""
     async for r in broadcast_command(cmd, params):
         logger.debug("Command result: %s", r)
 

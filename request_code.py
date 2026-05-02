@@ -1,3 +1,5 @@
+"""Request a one-time Roborock verification code for a user account."""
+
 import argparse
 import asyncio
 import logging
