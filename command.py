@@ -57,9 +57,7 @@ async def broadcast_command(cmd: RoborockCommand, params: list):
             failed.append(product.name)
             continue
 
-        mqtt_client = RoborockMqttClientV1(
-            user_data, DeviceData(device, product.model)
-        )
+        mqtt_client = RoborockMqttClientV1(user_data, DeviceData(device, product.model))
         try:
             yield await mqtt_client.send_command(cmd, params)
         except Exception:
@@ -71,21 +69,26 @@ async def broadcast_command(cmd: RoborockCommand, params: list):
     if failed:
         raise RuntimeError(f"Command failed for devices: {', '.join(failed)}")
 
+
 async def command(cmd: RoborockCommand, params: list):
     async for r in broadcast_command(cmd, params):
         logger.debug("Command result: %s", r)
 
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Command to all vacuums"
+    parser = argparse.ArgumentParser(description="Command to all vacuums")
+    parser.add_argument(
+        "command", type=parse_command, help="Command to send (e.g. APP_GOTO_TARGET)"
     )
-    parser.add_argument("command", type=parse_command, help="Command to send (e.g. APP_GOTO_TARGET)")
-    parser.add_argument("params", nargs="*", help="Command parameters (e.g. target_x target_y)")
-    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose logging")
+    parser.add_argument(
+        "params", nargs="*", help="Command parameters (e.g. target_x target_y)"
+    )
+    parser.add_argument(
+        "-v", "--verbose", action="store_true", help="Enable verbose logging"
+    )
     args = parser.parse_args()
-    
+
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
-    
+
     asyncio.run(command(args.command, args.params))
-    
