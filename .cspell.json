@@ -1,9 +1,15 @@
 {
   "version": "0.2",
   "words": [
+    "codeowners",
     "hmarr",
     "ipynb",
     "marocchino",
+    "mqtt",
+    "mypy",
+    "pycache",
+    "pyyaml",
+    "roborock",
     "pyx",
     "sarif",
     "SARIF",

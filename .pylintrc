@@ -1,0 +1,2 @@
+[TYPECHECK]
+ignored-modules=yaml,roborock,roborock.web_api,roborock.version_1_apis
