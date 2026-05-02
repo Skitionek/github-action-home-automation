@@ -1,3 +1,5 @@
+"""Authenticate against Roborock cloud and print reusable secret values."""
+
 import argparse
 import asyncio
 import logging
@@ -76,5 +78,7 @@ if __name__ == "__main__":
     logger.debug("Using code_or_password: %s", args.code_or_password)
 
     web_api = RoborockApiClient(username=args.username)
-    user_data = asyncio.run(authenticate_user(web_api, args.code_or_password))
-    save_user_data(args.username, user_data)
+    authenticated_user_data = asyncio.run(
+        authenticate_user(web_api, args.code_or_password)
+    )
+    save_user_data(args.username, authenticated_user_data)
