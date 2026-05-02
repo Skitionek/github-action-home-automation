@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "MegaLinter: fix",
+      "type": "shell",
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-e",
+        "VALIDATE_ALL_CODEBASE=true",
+        "-e",
+        "APPLY_FIXES=all",
+        "-v",
+        "${workspaceFolder}:/tmp/lint",
+        "ghcr.io/oxsecurity/megalinter:v8"
+      ],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
