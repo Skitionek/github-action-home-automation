@@ -64,7 +64,11 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     # Try to obtain user data
     parser = argparse.ArgumentParser(description="Roborock authentication")
-    parser.add_argument("--username", help="Username (email)", default=os.environ.get("ROBOROCK_USERNAME"))
+    parser.add_argument(
+        "--username",
+        help="Username (email)",
+        default=os.environ.get("ROBOROCK_USERNAME"),
+    )
     parser.add_argument("code_or_password", help="Code or password")
     args = parser.parse_args()
 
