@@ -19,7 +19,7 @@ def save_user_data(username: str, user_data: UserData) -> None:
 
     print("\nAdd the following as GitHub Actions secrets:")
     print(f"  ROBOROCK_USERNAME  = {username}")
-    print(f"  ROBOROCK_USER_DATA = |")
+    print("  ROBOROCK_USER_DATA = |")
     print(indented_user_data)
 
 
