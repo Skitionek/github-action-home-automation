@@ -82,6 +82,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_COMMENT_REPORTER: false
           SARIF_REPORTER: true
+          APPLY_FIXES: all
 
       # Remove the ephemeral action before create-pull-request runs so it
       # is never committed to the repository.
@@ -91,6 +92,7 @@ jobs:
 
       # Derive has_updated_sources from git status so downstream steps work.
       - name: Collect MegaLinter result
+        if: always()
         id: ml
         run: |
           if git diff --quiet; then
@@ -101,6 +103,7 @@ jobs:
 
       # ── Auto-fix pull request (PR only) ───────────────────────────────────
       - name: Set fix-PR flag
+        if: always()
         id: fix_check
         env:
           HAS_UPDATES: ${{ steps.ml.outputs.has_updated_sources }}
@@ -117,7 +120,7 @@ jobs:
       - name: Create Pull Request with applied fixes
         uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
         id: cpr
-        if: steps.fix_check.outputs.enabled == 'true'
+        if: always() && steps.fix_check.outputs.enabled == 'true'
         with:
           # PAT (Personal Access Token) is required when you want the auto-fix PR to
           # trigger other workflows (e.g. CI). GITHUB_TOKEN-created PRs do not trigger
@@ -134,7 +137,7 @@ jobs:
           base: ${{ github.head_ref }}
 
       - name: Post PR Comment
-        if: steps.fix_check.outputs.enabled == 'true'
+        if: always() && steps.fix_check.outputs.enabled == 'true'
         uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v2
         with:
           message: |
@@ -144,7 +147,7 @@ jobs:
           hide_and_recreate: true
 
       - name: Fail if PR Created
-        if: steps.fix_check.outputs.enabled == 'true' && steps.cpr.outputs.pull-request-url != ''
+        if: always() && steps.fix_check.outputs.enabled == 'true' && steps.cpr.outputs.pull-request-url != ''
         run: |
           echo "A PR with formatting fixes has been created. Please merge it before proceeding."
           echo "PR: ${{ steps.cpr.outputs.pull-request-url }}"
