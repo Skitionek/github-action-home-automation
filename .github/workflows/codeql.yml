@@ -73,6 +73,14 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
+          # Pin to the CodeQL bundle version shipped with this action version
+          # instead of the dynamically-resolved "recommended" version. Without
+          # this, init and analyze can each independently resolve a different
+          # "recommended" bundle if GitHub is mid-rollout of a new release
+          # between the two steps, causing:
+          #   "Loaded a configuration file for version 'X', but running
+          #   version 'Y'" and a CodeQL "configuration error".
+          tools: linked
 
       - name: Run manual build steps
         if: matrix.build-mode == 'manual'
