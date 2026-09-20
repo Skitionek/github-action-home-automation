@@ -69,10 +69,18 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
+        uses: github/codeql-action/init@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4.38.0
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
+          # Pin to the CodeQL bundle version shipped with this action version
+          # instead of the dynamically-resolved "recommended" version. Without
+          # this, init and analyze can each independently resolve a different
+          # "recommended" bundle if GitHub is mid-rollout of a new release
+          # between the two steps, causing:
+          #   "Loaded a configuration file for version 'X', but running
+          #   version 'Y'" and a CodeQL "configuration error".
+          tools: linked
 
       - name: Run manual build steps
         if: matrix.build-mode == 'manual'
@@ -84,6 +92,6 @@ jobs:
           exit 1
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        uses: github/codeql-action/analyze@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4.38.0
         with:
           category: "/language:${{matrix.language}}"
