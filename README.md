@@ -44,8 +44,9 @@ You can get the system running in just a few steps:
 To send the vacuum to coordinates manually:
 ```bash
 export ROBOROCK_USERNAME=your@email.com
-export ROBOROCK_USER_DATA="$(cat user_data.yaml)"
-python goto.py 2500 2500
+# Paste the YAML block printed by auth.py (the indented lines under "ROBOROCK_USER_DATA = |"):
+export ROBOROCK_USER_DATA="<paste the YAML block printed by auth.py>"
+python command.py app_goto_target 2500 2500
 ```
 
 Let me know if you end up reproducing or improving this setup—I'd love to hear about it!
